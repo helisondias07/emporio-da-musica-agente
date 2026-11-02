@@ -106,6 +106,19 @@ def search_products(
         return {"error": "strings deve ser 'nylon' ou 'steel' (aço)."}
 
     tokens = tokenize(query or "")
+    if _accessory_only(tokens) and category_ids is None:
+        return {
+            "count": 0,
+            "total_matches": 0,
+            "truncated": False,
+            "out_of_scope": True,
+            "filters": {"query": query},
+            "message": (
+                "A loja não vende acessórios (cordas avulsas, palhetas, cabos, cases, pedais ou amplificadores). "
+                "Não ofereça um instrumento só porque a descrição cita captação ou cordas."
+            ),
+            "products": [],
+        }
     matches = []
     for product in store.products:
         if category_ids is not None and product.category_id not in category_ids:
@@ -342,6 +355,28 @@ def _resolve_categories(store: Store, category: str | None) -> tuple[set[int] | 
 
 def _names(store: Store) -> list[str]:
     return [category.name for category in sorted(store.categories.values(), key=lambda item: item.category_id)]
+
+
+def _accessory_only(tokens: list[str]) -> bool:
+    blocked = {
+        "ampli",
+        "amplificador",
+        "amplificadores",
+        "amplis",
+        "cabo",
+        "cabos",
+        "case",
+        "cases",
+        "corda",
+        "cordas",
+        "encordoamento",
+        "encordoamentos",
+        "palheta",
+        "palhetas",
+        "pedal",
+        "pedais",
+    }
+    return bool(tokens) and all(token in blocked for token in tokens)
 
 
 def _normalize_strings(value: str | None) -> str | None:

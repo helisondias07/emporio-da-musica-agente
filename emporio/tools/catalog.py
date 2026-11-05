@@ -1,4 +1,4 @@
-"""Catalog tools: search, product detail, categories, and live promotions."""
+"""Busca de instrumento, ficha, categorias e promoção ativa."""
 
 from __future__ import annotations
 

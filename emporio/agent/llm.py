@@ -1,4 +1,4 @@
-"""One OpenAI-compatible client for OpenAI and for Gemini."""
+"""Cliente compatível com a API da OpenAI, também para o Gemini."""
 
 from __future__ import annotations
 

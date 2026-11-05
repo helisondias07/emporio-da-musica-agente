@@ -1,8 +1,7 @@
-"""Deterministic exchange, regret, and warranty windows.
+"""Prazos de arrependimento, troca e garantia.
 
-The model is not asked to do the calendar math. Dates follow the Civil Code
-convention used in the manual's wording: the start day is excluded and the
-deadline day counts, which is the same as anchor + N days, inclusive.
+O dia da âncora fica de fora e o dia do vencimento entra, como no Código Civil.
+Na prática: data + N dias, inclusive. O modelo não faz essa conta.
 """
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Paths, the store's reference date, and small parsers."""
+"""Caminhos, data da loja e leitura de datas."""
 
 from __future__ import annotations
 
@@ -10,9 +10,8 @@ from dotenv import load_dotenv
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
-# The order table stops on 2026-03-22. Wall-clock "today" on a reviewer's
-# machine would make every deadline look expired, so the store clock is fixed
-# unless EMPORIO_TODAY overrides it.
+# Último pedido da base: 22/03/2026. O relógio da máquina deixaria
+# todo prazo de troca vencido. EMPORIO_TODAY troca o "hoje" da loja.
 DEFAULT_REFERENCE_DATE = date(2026, 3, 25)
 
 

@@ -1,8 +1,7 @@
-"""Policy manual, split into sections from politicas_da_loja.pdf (version 2.1).
+"""Manual partido nas seções do PDF (versão 2.1, junho de 2025).
 
-The PDF tables extract with broken columns, so this module is the retrieval
-corpus. tests/test_policies.py checks that the operative sentences still
-occur in the PDF text.
+As tabelas extraem com as colunas fora de ordem, então o texto usado na busca
+fica aqui. O teste confere se as frases operacionais ainda estão no PDF.
 """
 
 from __future__ import annotations

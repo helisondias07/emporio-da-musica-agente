@@ -1,4 +1,4 @@
-"""Tool-calling loop. The session list is the conversation history."""
+"""Loop de function calling. A lista de mensagens é o histórico da sessão."""
 
 from __future__ import annotations
 

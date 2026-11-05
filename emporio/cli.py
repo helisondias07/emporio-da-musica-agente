@@ -1,4 +1,4 @@
-"""Command-line chat. History lasts for this process only."""
+"""Chat no terminal. O histórico dura só este processo."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Lexical retrieval over the policy sections, plus a PDF alignment check."""
+"""Busca nas seções do manual e checagem contra o PDF."""
 
 from __future__ import annotations
 

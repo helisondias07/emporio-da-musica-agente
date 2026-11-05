@@ -1,4 +1,4 @@
-"""Brazilian currency helpers. Money stays in Decimal end to end."""
+"""Reais em Decimal, do CSV até o rótulo R$ 1.234,56."""
 
 from __future__ import annotations
 

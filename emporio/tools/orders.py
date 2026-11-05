@@ -1,4 +1,4 @@
-"""Order lookup. Customer phone and email leave this tool already masked."""
+"""Consulta de pedido. Telefone e e-mail saem mascarados."""
 
 from __future__ import annotations
 

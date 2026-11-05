@@ -195,4 +195,4 @@ Promoções inativas continuam em `get_product`, no campo `inactive_promotions`,
 
 ## Uso de assistente de código
 
-Um assistente de código (Cursor) foi usado para implementar este projeto. Helison dirigiu a abordagem, revisou as decisões e é o responsável pela entrega.
+Usei o Cursor na implementação; as decisões e a entrega são minhas.

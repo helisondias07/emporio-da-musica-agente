@@ -1,7 +1,7 @@
-"""Decide when a message is asking for an accessory the store does not sell.
+"""Separa pedido de acessório de pedido de instrumento.
 
-"Violão de cordas de aço" is a guitar. "Vocês têm corda de aço?" is an accessory.
-The hint is appended for the model; the catalog is not searched for those items.
+"Violão de cordas de aço" é violão. "Vocês têm corda de aço?" é acessório.
+O aviso vai para o modelo. A busca de catálogo não atende esses itens.
 """
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Chat channel for the same agent. The page is the counter, not a site."""
+"""Chat no navegador, no mesmo agente. A página é o balcão, não um site."""
 
 from __future__ import annotations
 

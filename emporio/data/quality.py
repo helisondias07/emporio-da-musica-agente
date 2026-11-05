@@ -1,4 +1,4 @@
-"""Catalog rows whose free text disagrees with the product name."""
+"""Marca produto cuja descrição cita outra marca que não a do nome."""
 
 from __future__ import annotations
 

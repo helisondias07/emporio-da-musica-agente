@@ -1,4 +1,4 @@
-"""Load the CSVs into a Store. Parsing is strict: bad money or JSON fails fast."""
+"""Lê os CSVs. Dinheiro inválido ou specs quebrado interrompe a carga."""
 
 from __future__ import annotations
 

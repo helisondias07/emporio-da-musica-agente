@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#16110e">
+  <title>Empório da Música</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,520;0,9..144,640;1,9..144,520&family=Literata:ital,opsz,wght@0,7..72,460;0,7..72,620;1,7..72,460&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/chat.css">
+</head>
+<body>
+  <div class="room">
+    <main class="sheet">
+      <header class="mast">
+        <div class="seal" aria-hidden="true"></div>
+        <div class="identity">
+          <p class="eyebrow">Campo Grande · MS</p>
+          <h1>Empório da Música</h1>
+          <p class="tag">Sua música começa aqui.</p>
+        </div>
+        <div class="mast-side">
+          <p class="hours">seg–sex 9–18 · sáb 9–13</p>
+          <p class="status" id="status">Abrindo o balcão…</p>
+          <button type="button" class="text-btn" id="limpar">Nova conversa</button>
+        </div>
+      </header>
+      <div class="thread" id="thread" role="log" aria-live="polite"></div>
+      <form class="composer" id="composer">
+        <div class="chips" id="chips"></div>
+        <div class="row">
+          <label class="sr" for="texto">Mensagem para o balcão</label>
+          <textarea id="texto" rows="2" maxlength="4000" placeholder="Fala do instrumento, do pedido ou da dúvida."></textarea>
+          <button type="submit" id="enviar">Enviar</button>
+        </div>
+      </form>
+    </main>
+  </div>
+  <script src="/static/chat.js"></script>
+</body>
+</html>

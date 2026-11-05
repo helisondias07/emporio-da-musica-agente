@@ -2,7 +2,7 @@
 
 Agente de texto para o caso de AI Engineer da Artefact (Helison Dias). Responde clientes da Empório da Música, loja fictícia de instrumentos em Campo Grande, Mato Grosso do Sul. As respostas ao cliente são em português.
 
-O agente consulta preço, estoque e pedido com ferramentas sobre os CSVs, e lê as regras da loja num índice de seções do manual. O histórico da conversa fica na sessão do CLI.
+A interface é um chat: a pessoa fala com o balcão, e o mesmo agente consulta preço, estoque e pedido nas ferramentas sobre os CSVs, ou lê as regras da loja no índice do manual. O CLI continua como fallback. O histórico da conversa fica na sessão.
 
 ## Como rodar
 
@@ -15,15 +15,17 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Sem chave de API, para conferir a camada de dados:
+Sem chave de API, para conferir a camada de dados e abrir o chat:
 
 ```bash
 python -m pytest
 python -m emporio.demo
-python main.py --demo
+python main.py --web
 ```
 
-Conversa, depois de colocar a chave no `.env` ou no ambiente:
+O chat sobe em http://127.0.0.1:4721 . Sem chave, a página abre e diz que o modelo não está configurado. Não inventa preço nem prazo. Com `OPENAI_API_KEY` ou `GEMINI_API_KEY` no `.env`, a mesma tela responde de verdade.
+
+O CLI, se preferir o terminal:
 
 ```bash
 python main.py
@@ -32,9 +34,17 @@ python main.py --once "Quanto custa o Takamine GD20?"
 python -m emporio
 ```
 
-Dentro do chat: `/limpar` zera a sessão, `/sair` encerra. Repetir `--once` monta uma conversa curta de vários turnos. O histórico vive no processo. Não é gravado em disco.
+No chat, "Nova conversa" zera a sessão. No CLI, `/limpar` zera e `/sair` encerra. Repetir `--once` monta uma conversa curta de vários turnos. O histórico vive no processo. Não é gravado em disco.
 
-Se a chave faltar, o CLI sai com código 2 e aponta o demo e os testes.
+Se a chave faltar no CLI, ele sai com código 2 e aponta o demo e os testes. A porta do chat muda com `--port` ou `EMPORIO_PORT`.
+
+## Interface
+
+O produto é o chat (`python main.py --web`). Uma folha de catálogo no centro da tela, tipografia serifada, madeira e papel. Não há página de apresentação. A saudação inicial é texto fixo da interface, não uma resposta de modelo.
+
+Cada mensagem vai para o mesmo loop de ferramentas do CLI. Quando o agente consulta dados, a tela mostra uma linha curta ("Olhei o catálogo", "Olhei o pedido e o manual da loja"). Isso torna visível a decisão de arquitetura sem abrir um painel de debug. A sessão é um cookie no processo. "Nova conversa" chama `POST /api/limpar`.
+
+O CLI (`python main.py`) permanece para quem quiser o agente no terminal, inclusive `--verbose` e `--demo`.
 
 ## Provedor e modelo
 
@@ -62,8 +72,9 @@ Os arquivos em `examples/` não saíram de um modelo ao vivo. Não havia chave d
 ## Estrutura
 
 ```
-main.py                     entrada do CLI (python main.py)
-emporio/cli.py              argparse e loop da sessão
+main.py                     entrada do CLI e do chat (python main.py --web)
+emporio/cli.py              argparse, sessão do terminal
+emporio/web/                chat do balcão (página e API)
 emporio/agent/prompts.py    persona e regras das ferramentas
 emporio/agent/loop.py       loop de tool calling e histórico em memória
 emporio/agent/llm.py        cliente OpenAI / Gemini

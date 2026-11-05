@@ -4,7 +4,7 @@ Helison Dias. Artefact AI Engineer case. This is the written companion to the re
 
 ## What was built
 
-A Python text agent that answers customers of Empório da Música, the fictional instrument shop in Campo Grande/MS. The interface is a CLI (`python main.py` or `python -m emporio`) with the conversation kept in memory for the session. Customer replies are in Portuguese, in the voice the store's own manual asks for: informal, professional, and specific.
+A Python text agent that answers customers of Empório da Música, the fictional instrument shop in Campo Grande/MS. The interface is a chat (`python main.py --web`) on the same process and the same tool loop. The CLI (`python main.py`) stays as a fallback. Customer replies are in Portuguese, in the voice the store's own manual asks for: informal, professional, and specific. The page is the conversation, not a marketing site. Without a model key it opens and says so, instead of inventing a catalog answer.
 
 The agent can filter the catalog (violões up to R$ 1.000, a named model, what is actually on promotion), look up an order by id, tracking code, or customer, and apply the return, shipping, warranty, hours, and privacy rules from the policy manual. It declines strings, picks, cables, cases, pedals, and amplifiers, which the store does not sell.
 
@@ -62,11 +62,11 @@ python -m emporio.demo
 
 The demo and the tests need no key. They load the CSVs and the PDF.
 
-For the chat, copy `.env.example` to `.env` and set `OPENAI_API_KEY` or `GEMINI_API_KEY`. Then `python main.py`. Optional: `LLM_MODEL`, `LLM_PROVIDER`, `EMPORIO_TODAY`.
+For the chat, copy `.env.example` to `.env`, set `OPENAI_API_KEY` or `GEMINI_API_KEY`, and run `python main.py --web` (http://127.0.0.1:4721). The terminal agent is `python main.py`. Optional: `LLM_MODEL`, `LLM_PROVIDER`, `EMPORIO_TODAY`.
 
 ## Limitations
 
-The model can ignore a tool. I would block customer-facing prices and dates that did not appear in a tool result. Order lookup needs a real identity check. Freight outside Campo Grande needs a quote API the pack does not include. Complaints need a handoff, not only the 24-business-hour sentence. The policy index is a reviewed transcription of a PDF whose tables extract badly, guarded by a phrase check against the PDF. The contradictory product descriptions should be fixed by the store, not by the agent. Session memory is the CLI process only. The default model names will age, which is why they are environment variables.
+The model can ignore a tool. I would block customer-facing prices and dates that did not appear in a tool result. Order lookup needs a real identity check. Freight outside Campo Grande needs a quote API the pack does not include. Complaints need a handoff, not only the 24-business-hour sentence. The policy index is a reviewed transcription of a PDF whose tables extract badly, guarded by a phrase check against the PDF. The contradictory product descriptions should be fixed by the store, not by the agent. Session memory is the chat process (a cookie) or the CLI process. The default model names will age, which is why they are environment variables.
 
 With more time I would add a scored eval over the five conversations (did the trace hit the right tool and the right id, does the reply contain the right price and the right deadline), a WhatsApp transport with history keyed by chat, and a human queue for complaints.
 

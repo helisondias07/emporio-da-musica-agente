@@ -91,6 +91,7 @@ def test_loop_runs_a_tool_and_keeps_history():
     session = AgentSession(_Client(completions), model="gpt-4.1-mini", verbose=False)
     first = session.run_turn("Quanto custa o Takamine GD20?")
     assert "2.199,00" in first
+    assert session.tools_used == ["get_product"]
     tool_payload = completions.seen[1][-1]["content"]
     assert "R$ 2.199,00" in tool_payload
     assert "R$ 2.089,05" in tool_payload

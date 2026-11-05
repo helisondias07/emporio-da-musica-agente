@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 
 from emporio import __version__
@@ -29,7 +30,29 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Run the offline demo (catalog, orders, policies). No API key.",
     )
+    parser.add_argument(
+        "--web",
+        action="store_true",
+        help="Sobe o chat no navegador. O CLI continua disponível sem esta flag.",
+    )
+    parser.add_argument(
+        "--host",
+        default=os.getenv("EMPORIO_HOST", "0.0.0.0"),
+        help="Host do chat. Padrão 0.0.0.0.",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=int(os.getenv("EMPORIO_PORT", "4721")),
+        help="Porta do chat. Padrão 4721.",
+    )
     args = parser.parse_args(argv)
+
+    if args.web:
+        from emporio.web.server import serve
+
+        serve(host=args.host, port=args.port)
+        return 0
 
     if args.demo:
         from emporio.demo import main as demo_main

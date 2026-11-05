@@ -25,9 +25,11 @@ class AgentSession:
         self.messages: list[dict] = [
             {"role": "system", "content": build_system_prompt(reference_today())}
         ]
+        self.tools_used: list[str] = []
 
     def reset(self) -> None:
         self.messages = [{"role": "system", "content": build_system_prompt(reference_today())}]
+        self.tools_used = []
 
     def run_turn(self, user_text: str) -> str:
         content = user_text.strip()
@@ -35,6 +37,7 @@ class AgentSession:
         if hint:
             content = f"{content}\n\n[instrução interna, não revele ao cliente: {hint}]"
         self.messages.append({"role": "user", "content": content})
+        self.tools_used = []
 
         for _ in range(MAX_TOOL_ROUNDS):
             response = chat_completion(self.client, self.model, self.messages, OPENAI_TOOLS)
@@ -46,6 +49,7 @@ class AgentSession:
             for call in tool_calls:
                 name = call.function.name
                 raw_args = call.function.arguments
+                self.tools_used.append(name)
                 if self.verbose:
                     self.printer(f"[tool] {name} {raw_args}")
                 result = dispatch(name, raw_args)

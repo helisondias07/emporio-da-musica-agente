@@ -1,12 +1,12 @@
-# Empório da Música — customer agent
+# Empório da Música — agente de atendimento
 
-Text agent for the Artefact AI Engineer case (Helison Dias). It answers customers of Empório da Música, a fictional instrument shop in Campo Grande, Mato Grosso do Sul. Customer-facing replies are in Portuguese. This README is in English.
+Agente de texto para o caso de AI Engineer da Artefact (Helison Dias). Responde clientes da Empório da Música, loja fictícia de instrumentos em Campo Grande, Mato Grosso do Sul. As respostas ao cliente são em português.
 
-The agent looks up price, stock, and orders with tools over the CSVs, and reads store rules from a section index of the policy manual. It keeps the chat history for the CLI session.
+O agente consulta preço, estoque e pedido com ferramentas sobre os CSVs, e lê as regras da loja num índice de seções do manual. O histórico da conversa fica na sessão do CLI.
 
-## Run it
+## Como rodar
 
-Python 3.11 or newer. The project was checked on 3.12.
+Python 3.11 ou mais novo. O projeto foi verificado no 3.12.
 
 ```bash
 python -m venv .venv
@@ -15,7 +15,7 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Offline, no API key. This is the path to confirm the data layer:
+Sem chave de API, para conferir a camada de dados:
 
 ```bash
 python -m pytest
@@ -23,7 +23,7 @@ python -m emporio.demo
 python main.py --demo
 ```
 
-Chat, once a key is in `.env` or the environment:
+Conversa, depois de colocar a chave no `.env` ou no ambiente:
 
 ```bash
 python main.py
@@ -32,83 +32,83 @@ python main.py --once "Quanto custa o Takamine GD20?"
 python -m emporio
 ```
 
-Commands inside the chat: `/limpar` clears the session, `/sair` quits. Repeat `--once` to script a short multi-turn conversation. History lives in the process. It is not written to disk.
+Dentro do chat: `/limpar` zera a sessão, `/sair` encerra. Repetir `--once` monta uma conversa curta de vários turnos. O histórico vive no processo. Não é gravado em disco.
 
-If the key is missing, the CLI exits with code 2 and points at the demo and the tests.
+Se a chave faltar, o CLI sai com código 2 e aponta o demo e os testes.
 
-## Provider and model
+## Provedor e modelo
 
-One OpenAI-compatible client. Pick a provider with the key you have.
+Um cliente compatível com a API da OpenAI. O provedor segue a chave que estiver definida.
 
-| Env | Effect |
+| Variável | Efeito |
 | --- | --- |
-| `OPENAI_API_KEY` | OpenAI. Default model `gpt-4.1-mini`. |
-| `OPENAI_BASE_URL` | Optional. Point this at any OpenAI-compatible gateway and set `LLM_MODEL`. |
-| `GEMINI_API_KEY` or `GOOGLE_API_KEY` | Gemini's OpenAI-compatible endpoint. Default model `gemini-3.8-flash`. |
-| `GEMINI_BASE_URL` | Optional. Default `https://generativelanguage.googleapis.com/v1beta/openai/`. |
-| `LLM_PROVIDER` | `openai` or `gemini`. Needed only when both keys are set. If both are set and this is empty, OpenAI is used. |
-| `LLM_MODEL` | Overrides the default model name. |
-| `EMPORIO_TODAY` | Store clock. Unset means `2026-03-25`. |
-| `EMPORIO_DATA_DIR` | Alternate folder for the CSVs and the PDF. |
+| `OPENAI_API_KEY` | OpenAI. Modelo padrão `gpt-4.1-mini`. |
+| `OPENAI_BASE_URL` | Opcional. Aponta para outro gateway compatível. Ajuste `LLM_MODEL`. |
+| `GEMINI_API_KEY` ou `GOOGLE_API_KEY` | Endpoint compatível do Gemini. Modelo padrão `gemini-3.8-flash`. |
+| `GEMINI_BASE_URL` | Opcional. Padrão `https://generativelanguage.googleapis.com/v1beta/openai/`. |
+| `LLM_PROVIDER` | `openai` ou `gemini`. Só é necessário quando as duas chaves existem. Se estiver vazio, usa OpenAI. |
+| `LLM_MODEL` | Troca o nome do modelo padrão. |
+| `EMPORIO_TODAY` | Relógio da loja. Vazio significa `2026-03-25`. |
+| `EMPORIO_DATA_DIR` | Pasta alternativa para os CSVs e o PDF. |
 
-`gpt-4.1-mini` is the default because it follows tool calls without a reasoning step, which is what this loop needs. OpenAI has marked it deprecated. If an account rejects the name, set `LLM_MODEL=gpt-5-mini` or `LLM_MODEL=gpt-4o-mini`. For `gpt-5*` the client sends `reasoning_effort=low` and drops `temperature`; if the API rejects either field, it retries once without it.
+`gpt-4.1-mini` é o padrão porque segue tool calling sem etapa de raciocínio, que é o que este loop precisa. A OpenAI marcou esse id como deprecated. Se a conta recusar o nome, use `LLM_MODEL=gpt-5-mini` ou `LLM_MODEL=gpt-4o-mini`. Para `gpt-5*` o cliente manda `reasoning_effort=low` e não manda `temperature`. Se a API recusar um desses campos, tenta de novo sem ele.
 
-`gemini-3.8-flash` is the model id in Google's current OpenAI-compatibility docs. Gemini Flash may spend tokens on thinking. If a turn is slow or the tool loop stalls, switch `LLM_MODEL` to another flash model your key can call.
+`gemini-3.8-flash` é o id que a documentação atual de compatibilidade da Google mostra. O Flash pode gastar tokens pensando. Se o turno ficar lento ou o loop de ferramenta travar, troque `LLM_MODEL` por outro flash que a sua chave aceite.
 
-Do not commit `.env`. `.env.example` lists the variables and nothing else.
+Não commite o `.env`. O `.env.example` só lista as variáveis.
 
-The examples in `examples/` were not produced by a live model. No API key was available in the environment where this project was built. They were written from the tool output and checked by `tests/test_examples.py`.
+Os arquivos em `examples/` não saíram de um modelo ao vivo. Não havia chave de API no ambiente em que o projeto foi montado. O texto foi escrito a partir da saída das ferramentas e é checado por `tests/test_examples.py`.
 
-## Layout
-
-```
-main.py                     CLI entry (python main.py)
-emporio/cli.py              argparse, session loop
-emporio/agent/prompts.py    Portuguese persona and tool rules
-emporio/agent/loop.py       tool-calling loop, in-memory history
-emporio/agent/llm.py        OpenAI / Gemini client
-emporio/scope.py            accessory vs instrument hint
-emporio/tools/              catalog, orders, aftersales, tool schemas
-emporio/retrieval/          policy sections and BM25 lookup
-emporio/data/loader.py      CSV load
-emporio/demo.py             offline scripted path
-data/                       CSVs, policy PDF
-examples/                   five conversations
-tests/                      offline tests
-```
-
-## Architecture
+## Estrutura
 
 ```
-customer message
-    -> session history
-    -> accessory hint, when the message asks for one
-    -> LLM with tool calling
-         search_products / get_product     products + promotions
+main.py                     entrada do CLI (python main.py)
+emporio/cli.py              argparse e loop da sessão
+emporio/agent/prompts.py    persona e regras das ferramentas
+emporio/agent/loop.py       loop de tool calling e histórico em memória
+emporio/agent/llm.py        cliente OpenAI / Gemini
+emporio/scope.py            aviso de acessório versus instrumento
+emporio/tools/              catálogo, pedidos, pós-venda, schemas
+emporio/retrieval/          seções do manual e busca BM25
+emporio/data/loader.py      carga dos CSVs
+emporio/demo.py             caminho offline, sem modelo
+data/                       CSVs e PDF do manual
+examples/                   cinco conversas
+tests/                      testes offline
+```
+
+## Arquitetura
+
+```
+mensagem do cliente
+    -> histórico da sessão
+    -> aviso de acessório, quando a mensagem pede um
+    -> LLM com tool calling
+         search_products / get_product     produtos + promoções
          list_categories
          list_active_promotions
-         lookup_order                      orders + customers + items
-         evaluate_aftersales               policy windows, computed
-         search_policies                   manual sections
-    -> Portuguese reply
+         lookup_order                      pedidos + clientes + itens
+         evaluate_aftersales               prazos do manual, calculados
+         search_policies                   seções do manual
+    -> resposta em português
 ```
 
-The loop is a plain tool loop, not a framework. Up to six tool rounds per turn. The model sees the system prompt, the prior turns, and the JSON from each tool. `--verbose` prints the tool name and arguments on stderr.
+O loop é um tool loop simples, sem framework. No máximo seis rodadas de ferramenta por turno. O modelo vê o prompt de sistema, os turnos anteriores e o JSON de cada ferramenta. `--verbose` imprime o nome e os argumentos no stderr.
 
-Why this shape:
+Por que este formato:
 
-- Prices, stock, and order status are rows. A tool that filters them is easier to test than asking the model to read a CSV, and it cannot "remember" a price that is not in the result.
-- The manual is eight pages with stable headings. A section index plus BM25 is enough. Embeddings would add a second API, a vector store, and nothing to retrieve that the headings do not already name. If the manual grew past a few dozen pages, the same sections could be embedded later without changing the tool the model calls.
-- Deadline questions are date arithmetic. The model is told not to do that math. `evaluate_aftersales` returns `within_time_window` and a deadline. The model still has to phrase the answer, and it still calls `search_policies` so the wording stays tied to the manual.
-- Pandas or SQLite would also work. The tables are 65 products and 20 orders. The loader uses the stdlib `csv` module and `Decimal` so `799.9` does not become a float. That is the whole data layer.
+- Preço, estoque e status de pedido são linhas. Uma ferramenta que filtra isso é mais fácil de testar do que pedir ao modelo para ler o CSV, e ele não "lembra" um preço que não veio no resultado.
+- O manual tem oito páginas e títulos estáveis. Índice de seções mais BM25 chega. Embedding pediria outra API e um banco vetorial, sem recuperar nada que o título da seção já não aponte. Se o manual crescer, as mesmas seções podem ser embedadas depois, sem trocar a ferramenta que o modelo chama.
+- Prazo é conta de calendário. O modelo é instruído a não fazer essa conta. `evaluate_aftersales` devolve `within_time_window` e a data limite. O modelo ainda redige a frase, e ainda chama `search_policies` para a redação ficar presa ao manual.
+- Pandas ou SQLite também serviriam. São 65 produtos e 20 pedidos. O loader usa o módulo `csv` da biblioteca padrão e `Decimal`, para `799.9` não virar float. Essa é a camada de dados inteira.
 
-The persona follows section 7 of the manual: informal but professional, Brazilian Portuguese, "você", no emoji, no robotic opener. The tagline is "Sua música começa aqui." The agent says it is the store's virtual attendant, not a model name.
+A persona segue a seção 7 do manual: informal e profissional, português do Brasil, "você", sem emoji, sem abertura de robô. A frase da casa é "Sua música começa aqui." O agente se apresenta como o atendimento da loja, não como nome de modelo.
 
-## Data
+## Dados
 
-File names were shortened. The bytes match the challenge pack.
+Os nomes dos arquivos foram encurtados. Os bytes são os do pacote do desafio.
 
-| In this repo | Original name |
+| Neste repositório | Nome original |
 | --- | --- |
 | `data/products.csv` | `desafio_tecnico_ai_eng - products.csv` |
 | `data/promotions.csv` | `desafio_tecnico_ai_eng - promotions.csv` |
@@ -118,70 +118,70 @@ File names were shortened. The bytes match the challenge pack.
 | `data/orders.csv` | `desafio_tecnico_ai_eng - orders.csv` |
 | `data/politicas_da_loja.pdf` | `políticas_da_loja.pdf` |
 
-What the loader normalizes:
+O que o loader normaliza:
 
-- Money is `Decimal`. Labels use Brazilian grouping (`R$ 2.199,00`).
-- `is_active` is `0` or `1`. Only `1` changes a price. If two active discounts ever land on one SKU, the larger one wins. In this file they do not overlap.
-- Sale price is the list price after the active discount. A filter such as "até R$ 1000" uses the sale price, which is what the customer would pay.
-- PIX is 5% off the list price and only when there is no active promotion (manual section 6.2). The tool returns `pix_price_label: null` on a promotional price.
-- `specs` is parsed JSON. A failed parse aborts the load.
-- Availability is derived, not stored: `active` and stock above zero is `disponível`; `active` and stock zero is `esgotado`; `coming_soon` is not for sale even if stock is above zero (product 130, stock 2); `discontinued` is out of the catalog (products 113 and 136).
-- Order lines have no unit price. The tool shows the product name, the quantity, and the order total as charged. It does not reprice the order from today's catalog.
-- Phone and email on a customer record are masked before they reach the model (`final 7821`, `a***@domain`). A name that matches more than one customer returns the names and cities and no orders.
+- Dinheiro fica em `Decimal`. Os rótulos usam o agrupamento brasileiro (`R$ 2.199,00`).
+- `is_active` é `0` ou `1`. Só `1` muda o preço. Se dois descontos ativos caírem no mesmo SKU, vale o maior. Neste arquivo eles não se sobrepõem.
+- O preço de venda é o de tabela depois do desconto ativo. Um filtro como "até R$ 1000" usa o preço de venda, que é o que o cliente pagaria.
+- O PIX é 5% sobre o preço de tabela, e só quando não há promoção ativa (seção 6.2 do manual). A ferramenta devolve `pix_price_label: null` em preço promocional.
+- `specs` é JSON. Se o parse falhar, a carga para.
+- Disponibilidade é derivada, não está numa coluna: `active` com estoque acima de zero é disponível; `active` com estoque zero é esgotado; `coming_soon` não está à venda mesmo com estoque (produto 130, estoque 2); `discontinued` saiu do catálogo (produtos 113 e 136).
+- O item do pedido não tem preço unitário. A ferramenta mostra o nome, a quantidade e o total cobrado. Não recalcula o pedido com o preço de hoje.
+- Telefone e e-mail do cliente são mascarados antes de chegar ao modelo (`final 7821`, `a***@domain`). Um nome que casa com mais de um cliente devolve os nomes e as cidades, sem os pedidos.
 
-### Catalog rows that disagree with themselves
+### Linhas do catálogo que discordam de si
 
-Six products have a description whose brand is not the brand in the name: 135, 137, 139, 140, 142, 144 (for example the "Music Man" bass is described as a Fender Jazz Bass). Several spec blobs are also copied across SKUs (the three keyboards share one spec object). The tool sets `description_conflicts_with_name` or `specs_are_shared`, drops the unsafe text, and the prompt forbids quoting it. Price, stock, status, and the name stay.
+Seis produtos têm descrição de uma marca diferente da marca do nome: 135, 137, 139, 140, 142 e 144 (o baixo "Music Man", por exemplo, é descrito como um Fender Jazz Bass). Alguns blocos de spec também estão copiados entre SKUs (os três teclados compartilham o mesmo objeto). A ferramenta marca `description_conflicts_with_name` ou `specs_are_shared`, esconde o texto inseguro, e o prompt proíbe citá-lo. Preço, estoque, status e nome permanecem.
 
-The name is the SKU title. The description is not repaired in the CSV, so the original file stays intact.
+O nome é o título do SKU. A descrição não é corrigida no CSV, para o arquivo original ficar intacto.
 
-### Store clock
+### Relógio da loja
 
-The latest order date in the file is 22/03/2026. A laptop clock of November 2026 would make every return window look closed and every open order look abandoned. `EMPORIO_TODAY` defaults to 25/03/2026, a few days after that snapshot. Override it to test other windows. The aftersales tool and the system prompt both use this date.
+A data mais recente de pedido no arquivo é 22/03/2026. O relógio de um notebook em novembro de 2026 faria todo prazo de troca parecer vencido e todo pedido em aberto parecer abandonado. `EMPORIO_TODAY` vale `2026-03-25` por padrão, alguns dias depois desse recorte. Dá para sobrescrever e testar outras janelas. A ferramenta de pós-venda e o prompt de sistema usam essa data.
 
-### Policy conflicts, and the reading this project uses
+### Conflitos do manual, e a leitura deste projeto
 
-The manual and the tables do not fully agree. The agent does not debate these with the customer unless asked.
+O manual e as tabelas não fecham em tudo. O agente não discute isso com o cliente, a menos que perguntem.
 
-| Conflict | Reading used |
+| Conflito | Leitura adotada |
 | --- | --- |
-| Cover and section 1.2 list (67) 3341-4444 as phone and WhatsApp. Section 7 names WhatsApp (67) 3321-4500. | 3341-4444 is the store phone. 3321-4500 is the WhatsApp channel. |
-| Section 1.2 prints `contato@empóriodamusica.com.br`. The cover prints `contato@emporiodamusica.com.br`. | The cover address, without the accent. An accented domain is treated as a typo. |
-| The payment table says credit in up to 12 installments with a R$ 100 minimum installment. Section 3.1 is finer: up to 3x with no minimum except under R$ 50, 4x–6x with a R$ 80 minimum, 7x–12x with a R$ 100 minimum. | Section 3.1 wins. The "under R$ 50" sentence is quoted as written. It is not turned into a new rule. |
-| Section 1 says the catalog has more than 300 instruments. The CSV has 65 products, and categories 6, 7, and 8 have none. | What can be sold is the CSV. The "300" line is institutional copy. |
-| Section 7.1 says to suggest a partner shop for accessories. No partner list is in the pack. | Decline the accessory. Do not invent a shop name. Say the counter team can suggest one. |
-| Category 3's blurb mentions loose percussion pieces. There is no such SKU, and section 1 says instruments only. | Answer from the product rows. |
-| Orders have tracking and a delivery estimate, and no in-store flag. There is no received-at column. | Every order is treated as a distance sale. For a delivered order with no receipt date from the customer, the estimate is used and flagged as assumed. Otherwise the agent asks. Regret is 7 calendar days after receipt, deadline inclusive (`receipt + 7`). Defect exchange at the store is 30 days after the purchase date. Legal warranty is 90 days after receipt. |
-| The manual's tracking example is a Correios-style code. The order row does not name the carrier. | Give the code. Say it can be checked on Correios or Jadlog. Do not pick one. |
+| A capa e a seção 1.2 listam (67) 3341-4444 como telefone e WhatsApp. A seção 7 nomeia o WhatsApp (67) 3321-4500. | 3341-4444 é o telefone da loja. 3321-4500 é o canal de WhatsApp. |
+| A seção 1.2 imprime `contato@empóriodamusica.com.br`. A capa imprime `contato@emporiodamusica.com.br`. | O endereço da capa, sem acento. O domínio acentuado é tratado como erro de digitação. |
+| A tabela de pagamento fala em crédito até 12x com parcela mínima de R$ 100. A seção 3.1 é mais fina: até 3x sem mínimo, exceto abaixo de R$ 50; 4x a 6x com mínimo de R$ 80; 7x a 12x com mínimo de R$ 100. | Vale a seção 3.1. A frase "abaixo de R$ 50" é citada como está. Não vira uma regra nova. |
+| A seção 1 diz que o catálogo tem mais de 300 instrumentos. O CSV tem 65 produtos, e as categorias 6, 7 e 8 estão vazias. | O que pode ser vendido é o CSV. A frase dos 300 é texto institucional. |
+| A seção 7.1 manda sugerir loja parceira para acessório. O pacote não traz essa lista. | Recusar o acessório. Não inventar nome de loja. Dizer que o balcão pode indicar. |
+| A descrição da categoria 3 fala em peças avulsas de percussão. Não há esse SKU, e a seção 1 diz que a loja só vende instrumento. | Responder a partir das linhas de produto. |
+| Os pedidos têm rastreio e previsão de entrega, e não têm marca de venda de balcão. Não há coluna de data de recebimento. | Todo pedido é tratado como venda à distância. Se o pedido está entregue e o cliente não diz quando recebeu, a previsão é usada e marcada como suposta. Caso contrário, o agente pergunta. Arrependimento: 7 dias corridos após o recebimento, prazo inclusive (`recebimento + 7`). Troca por defeito na loja: 30 dias após a data da compra. Garantia legal: 90 dias após o recebimento. |
+| O exemplo de rastreio do manual tem cara de código dos Correios. A linha do pedido não diz a transportadora. | Informar o código. Dizer que dá para consultar nos Correios ou na Jadlog. Não escolher uma. |
 
-Inactive promotions stay in `get_product` under `inactive_promotions` so the agent can say an offer the customer remembers is not live. They never change `sale_price_label`. The Takamine GD20 (id 95) is the clear case: list price R$ 2.199,00, PIX R$ 2.089,05, a 12% "Oferta Especial" with `is_active = 0`.
+Promoções inativas continuam em `get_product`, no campo `inactive_promotions`, para o agente poder dizer que uma oferta que o cliente lembra não está valendo. Elas não mudam `sale_price_label`. O Takamine GD20 (id 95) é o caso claro: tabela R$ 2.199,00, PIX R$ 2.089,05, oferta de 12% "Oferta Especial" com `is_active = 0`.
 
-## Examples
+## Exemplos
 
-| File | What it shows |
+| Arquivo | O que mostra |
 | --- | --- |
-| `examples/01_violao_ate_1000.md` | 12 in-stock violões at or under R$ 1.000, plus the out-of-stock and discontinued rows in that cap. Second turn recommends beginner nylon models. |
-| `examples/02_endereco_e_horario.md` | Address, Saturday hours, phone, and WhatsApp. |
-| `examples/03_preco_takamine_gd20.md` | GD20 price, the inactive 12% offer, the two violões that are actually on promotion, and the expired Woodstock Black Friday. |
-| `examples/04_arrependimento_pedido_7.md` | Return policy applied to order 7 and a receipt date of 17/02/2026. Regret is closed. Legal warranty is open until 18/05/2026. |
-| `examples/05_pedido_8_e_acessorio.md` | Order 8 is still "enviado" 25 days after the estimate. Strings and an amplifier are refused. |
+| `examples/01_violao_ate_1000.md` | 12 violões em estoque até R$ 1.000, mais o esgotado e o descontinuado nessa faixa. O segundo turno indica nylon para iniciante. |
+| `examples/02_endereco_e_horario.md` | Endereço, sábado, telefone e WhatsApp. |
+| `examples/03_preco_takamine_gd20.md` | Preço do GD20, a oferta de 12% inativa, os dois violões que estão em promoção, e a Black Friday vencida do Woodstock. |
+| `examples/04_arrependimento_pedido_7.md` | Política de troca no pedido 7, com recebimento em 17/02/2026. O arrependimento fechou. A garantia legal segue aberta até 18/05/2026. |
+| `examples/05_pedido_8_e_acessorio.md` | O pedido 8 continua "enviado" 25 dias depois da previsão. Corda e amplificador são recusados. |
 
-## Tests
+## Testes
 
-`python -m pytest` loads the real CSVs and the real PDF. It checks the 12-guitar filter, the GD20 price, the four active promotions, order masking, the order 7 windows, policy phrases present in both the PDF and the section index, the accessory guard, a fake tool-calling turn that keeps history, and the strings in `examples/`. Nothing in the suite calls a model API.
+`python -m pytest` carrega os CSVs e o PDF de verdade. Confere o filtro dos 12 violões, o preço do GD20, as quatro promoções ativas, o mascaramento do pedido, as janelas do pedido 7, as frases do manual no PDF e no índice, a trava de acessório, um turno falso de tool calling que guarda o histórico, e as frases em `examples/`. A suíte não chama API de modelo.
 
-## Limitations, and what I would do next
+## Limitações, e o que eu faria depois
 
-- The model can still skip a tool and invent a sentence. The guardrails are the prompt, the accessory hint, the accessory-only search refusal, and the date tool. A production version would reject replies that contain a price or a date not present in the tool payload.
-- Order lookup trusts whoever types the order id. Masking the phone is not authentication. Next step is a check against the phone or email on the customer row before any order detail is spoken.
-- There is no live tracking API, no freight quote, and no payment. Other cities stay at "the freight is calculated from the postal code." Campo Grande metro shipping (free above R$ 500, otherwise R$ 35, 1 to 3 business days) is only stated when the policy tool returns it.
-- Complaint handling stops at the manual's "24 business hours" line. There is no ticket queue and no human handoff.
-- The section index was transcribed from the PDF because the tables extract with broken columns. `policy_alignment()` fails the build if a key sentence disappears from either the PDF or the index. A larger manual should be re-split, then embedded, with this index kept as the baseline.
-- Several guitar, bass, drum, and keyboard descriptions are synthetic and contradict the name. I would send that list back to the store and stop selling technical claims on those SKUs until the row is fixed. The agent already refuses to quote them.
-- Session memory is the CLI process. A WhatsApp channel would need a store keyed by the chat id, plus the five-minute response rule in section 7.
-- Default model ids go stale. `LLM_MODEL` is the escape hatch on purpose.
-- This was not run against a live key here, so the example wording is the intended voice, not a captured completion. With a key, the next step is a small eval set: the five conversations above, scored on whether the tool trace contains the right ids and whether the reply contains the right prices and deadlines.
+- O modelo ainda pode pular uma ferramenta e inventar uma frase. As travas são o prompt, o aviso de acessório, a recusa de busca só de acessório e a ferramenta de data. Em produção eu rejeitaria uma resposta com preço ou data que não apareceu no retorno da ferramenta.
+- A consulta de pedido confia em quem digita o id. Mascarar o telefone não é autenticação. O passo seguinte é conferir o telefone ou o e-mail da ficha do cliente antes de falar o pedido.
+- Não há API de rastreio ao vivo, nem cotação de frete, nem pagamento. Fora de Campo Grande a resposta fica em "o frete é calculado pelo CEP". O frete da região (grátis acima de R$ 500, senão R$ 35, 1 a 3 dias úteis) só é dito quando a ferramenta de política devolve esse texto.
+- Reclamação para na frase das 24 horas úteis do manual. Não há fila nem passagem para uma pessoa.
+- O índice de seções foi transcrito do PDF porque as tabelas extraem com colunas quebradas. `policy_alignment()` falha se uma frase-chave sumir do PDF ou do índice. Um manual maior deveria ser repartido de novo e, aí sim, embedado, com este índice como base.
+- Várias descrições de guitarra, baixo, bateria e teclado são sintéticas e contradizem o nome. Eu devolveria essa lista para a loja e pararia de afirmar detalhe técnico nesses SKUs até a linha ser corrigida. O agente já se recusa a citá-las.
+- A memória da sessão é o processo do CLI. Um canal de WhatsApp precisaria de um armazenamento por id da conversa, além da regra de cinco minutos da seção 7.
+- Os ids de modelo padrão envelhecem. `LLM_MODEL` existe de propósito para isso.
+- Isto não foi executado com chave ao vivo aqui, então a redação dos exemplos é a voz pretendida, não uma completion capturada. Com chave, o passo seguinte é um conjunto de avaliação das cinco conversas: se o rastro chamou a ferramenta e o id certos, e se a resposta trouxe o preço e o prazo certos.
 
-## AI assistance
+## Uso de assistente de código
 
-A coding assistant (Cursor) was used to implement this project. Helison directed the approach, reviewed the decisions, and owns the submission.
+Um assistente de código (Cursor) foi usado para implementar este projeto. Helison dirigiu a abordagem, revisou as decisões e é o responsável pela entrega.

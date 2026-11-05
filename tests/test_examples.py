@@ -6,8 +6,8 @@ ROOT = Path(__file__).resolve().parents[1]
 EXAMPLES = sorted((ROOT / "examples").glob("*.md"))
 
 SOURCE_LINE = (
-    "This is not a transcript of a live model call — no API key was available "
-    "when the examples were prepared."
+    "Isto não é a transcrição de uma chamada ao vivo de um modelo — não havia chave de API "
+    "quando os exemplos foram preparados."
 )
 
 

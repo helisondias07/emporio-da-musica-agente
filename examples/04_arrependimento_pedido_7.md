@@ -1,19 +1,19 @@
-# Example 4 — Regret and the exchange policy on order 7
+# Exemplo 4 — Arrependimento e a política de troca no pedido 7
 
-**Scenario:** the customer wants to undo a purchase. The agent has to read the return policy and then apply it to a real order and a receipt date, instead of saying "yes" to every regret question.
+**Cenário:** o cliente quer desfazer a compra. O agente lê a política de devolução e aplica num pedido real e numa data de recebimento, em vez de dizer sim para todo arrependimento.
 
-**Tools:** `search_policies` on returns, `lookup_order(order_id=7)`, `evaluate_aftersales(order_id=7, receipt_date="2026-02-17")`.
+**Ferramentas:** `search_policies` sobre trocas, `lookup_order(order_id=7)`, `evaluate_aftersales(order_id=7, receipt_date="2026-02-17")`.
 
-**Source:** Written from the repository data and the policy manual (tool output). This is not a transcript of a live model call — no API key was available when the examples were prepared.
+**Fonte:** Escrito a partir dos dados do repositório e do manual de políticas (saída das ferramentas). Isto não é a transcrição de uma chamada ao vivo de um modelo — não havia chave de API quando os exemplos foram preparados.
 
-**Reference date:** 25/03/2026. Order 7 was placed on 03/02/2026, status delivered, total R$ 159,90 on credit in 3 installments, item Shelby SU-21S Soprano Sunburst, tracking BRKR1122334BR, estimated delivery 17/02/2026. The customer confirms that receipt date.
+**Data de referência:** 25/03/2026. O pedido 7 foi feito em 03/02/2026, status entregue, total R$ 159,90 no crédito em 3x, item Shelby SU-21S Soprano Sunburst, rastreio BRKR1122334BR, previsão de entrega 17/02/2026. O cliente confirma essa data de recebimento.
 
-Deadlines the tool returns:
-- regret and preference exchange: closed on 24/02/2026 (36 days after receipt)
-- in-store defect exchange: closed on 05/03/2026 (30 days after the purchase date)
-- legal warranty: still open until 18/05/2026
+Prazos que a ferramenta devolve:
+- arrependimento e troca por preferência: fecharam em 24/02/2026 (36 dias após o recebimento)
+- troca na loja por defeito: fechou em 05/03/2026 (30 dias após a compra)
+- garantia legal: ainda aberta até 18/05/2026
 
-## Conversation
+## Conversa
 
 **Cliente:** Me arrependi da minha compra. Posso devolver meu pedido?
 

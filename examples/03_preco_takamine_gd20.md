@@ -1,14 +1,14 @@
-# Example 3 — Price of the Takamine GD20, and which discounts are real
+# Exemplo 3 — Preço do Takamine GD20 e quais descontos valem
 
-**Scenario:** a named product, an expired offer the customer remembers, and the promotions that are actually active. This is the non-trivial catalog case: the 12% "Oferta Especial" on the GD20 is in the promotions table with `is_active = 0`, so it must not be quoted as a price.
+**Cenário:** um produto pelo nome, uma oferta vencida que o cliente lembra, e as promoções que estão ativas de fato. Este é o caso não trivial do catálogo: a "Oferta Especial" de 12% no GD20 está na tabela de promoções com `is_active = 0`, então não pode ser anunciada como preço.
 
-**Tools:** `get_product(name="Takamine GD20")`, `get_product` for the Tagima Woodstock, `list_active_promotions`.
+**Ferramentas:** `get_product(name="Takamine GD20")`, `get_product` do Tagima Woodstock, `list_active_promotions`.
 
-**Source:** Written from the repository data and the policy manual (tool output). This is not a transcript of a live model call — no API key was available when the examples were prepared.
+**Fonte:** Escrito a partir dos dados do repositório e do manual de políticas (saída das ferramentas). Isto não é a transcrição de uma chamada ao vivo de um modelo — não havia chave de API quando os exemplos foram preparados.
 
-**Reference date:** 25/03/2026. PIX is 5% off the list price and does not stack with an active promotion (manual section 6.2).
+**Data de referência:** 25/03/2026. O PIX é 5% sobre o preço de tabela e não acumula com promoção ativa (seção 6.2 do manual).
 
-## Conversation
+## Conversa
 
 **Cliente:** Quanto custa o Takamine GD20?
 

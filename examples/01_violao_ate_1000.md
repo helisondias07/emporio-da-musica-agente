@@ -1,14 +1,14 @@
-# Example 1 — Acoustic guitars up to R$ 1,000
+# Exemplo 1 — Violões até R$ 1.000
 
-**Scenario:** catalog filter, stock, and a follow-up that uses the same conversation.
+**Cenário:** filtro de catálogo, estoque e um segundo turno na mesma conversa.
 
-**Tools:** `search_products(category="violao", max_price_brl=1000)` twice, once with `in_stock_only=false` so out-of-stock rows are visible, then the nylon beginner names from that result.
+**Ferramentas:** `search_products(category="violao", max_price_brl=1000)` duas vezes, uma com `in_stock_only=false` para os itens fora de estoque aparecerem, e os nomes de nylon para iniciante que saem desse resultado.
 
-**Source:** Written from the repository data and the policy manual (tool output). This is not a transcript of a live model call — no API key was available when the examples were prepared.
+**Fonte:** Escrito a partir dos dados do repositório e do manual de políticas (saída das ferramentas). Isto não é a transcrição de uma chamada ao vivo de um modelo — não havia chave de API quando os exemplos foram preparados.
 
-**Reference date:** 25/03/2026.
+**Data de referência:** 25/03/2026.
 
-## Conversation
+## Conversa
 
 **Cliente:** Oi, boa tarde. Quais opções de violões disponíveis vocês têm até R$ 1000?
 

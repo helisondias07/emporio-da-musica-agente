@@ -1,14 +1,14 @@
-# Example 5 — A shipped order, and two products the store does not sell
+# Exemplo 5 — Pedido enviado e dois produtos que a loja não vende
 
-**Scenario:** order lookup by id, a delivery estimate that is already late on the store clock, and an accessory request in the same message. The agent reports the recorded status and does not invent a carrier or a new delivery date. Strings and amplifiers are declined because the store sells instruments only, and the manual's "suggest a partner shop" line has no partner list behind it.
+**Cenário:** consulta de pedido pelo id, uma previsão de entrega que já passou no relógio da loja, e um pedido de acessório na mesma mensagem. O agente informa o status que está gravado e não inventa transportadora nem data nova. Corda e amplificador são recusados porque a loja só vende instrumento, e a frase do manual sobre indicar loja parceira não tem lista de parceiros.
 
-**Tools:** `lookup_order(order_id=8)`. The accessory refusal is a scope rule plus section 1 and section 7.1 of the manual. No catalog search for the amp or the strings.
+**Ferramentas:** `lookup_order(order_id=8)`. A recusa do acessório é a regra de escopo mais as seções 1 e 7.1 do manual. Não há busca no catálogo por amplificador nem por corda.
 
-**Source:** Written from the repository data and the policy manual (tool output). This is not a transcript of a live model call — no API key was available when the examples were prepared.
+**Fonte:** Escrito a partir dos dados do repositório e do manual de políticas (saída das ferramentas). Isto não é a transcrição de uma chamada ao vivo de um modelo — não havia chave de API quando os exemplos foram preparados.
 
-**Reference date:** 25/03/2026. Order 8: Ana Carolina Ferreira, Campo Grande, placed 15/02/2026, status shipped, total R$ 349,90 on debit, item Kala KA-C Concert Mogno, tracking BRJL5544332BR, estimated delivery 28/02/2026. That estimate is 25 days in the past and the status is still "enviado".
+**Data de referência:** 25/03/2026. Pedido 8: Ana Carolina Ferreira, Campo Grande, feito em 15/02/2026, status enviado, total R$ 349,90 no débito, item Kala KA-C Concert Mogno, rastreio BRJL5544332BR, previsão de entrega 28/02/2026. Essa previsão está 25 dias no passado e o status continua "enviado".
 
-## Conversation
+## Conversa
 
 **Cliente:** Oi, consegue ver o pedido 8? Queria saber se já saiu para entrega. Ah, e vocês têm corda de aço e um amplificador pequeno?
 

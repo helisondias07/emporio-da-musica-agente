@@ -1,14 +1,14 @@
-# Example 2 — Store address and opening hours
+# Exemplo 2 — Endereço e horário da loja
 
-**Scenario:** policy lookup for where the store is and whether it opens on Saturday.
+**Cenário:** consulta ao manual para saber onde a loja fica e se abre no sábado.
 
-**Tools:** `search_policies(topic="address")` and `search_policies(topic="hours")`.
+**Ferramentas:** `search_policies(topic="address")` e `search_policies(topic="hours")`.
 
-**Source:** Written from the repository data and the policy manual (tool output). This is not a transcript of a live model call — no API key was available when the examples were prepared.
+**Fonte:** Escrito a partir dos dados do repositório e do manual de políticas (saída das ferramentas). Isto não é a transcrição de uma chamada ao vivo de um modelo — não havia chave de API quando os exemplos foram preparados.
 
-The reply uses the resolved contacts: store phone (67) 3341-4444, WhatsApp (67) 3321-4500, email without an accent. It does not walk the customer through the conflict in the manual.
+A resposta usa os contatos já resolvidos: telefone (67) 3341-4444, WhatsApp (67) 3321-4500, e-mail sem acento. Não explica ao cliente a divergência do manual.
 
-## Conversation
+## Conversa
 
 **Cliente:** Oi! Qual o endereço da loja? Vocês abrem sábado?
 
